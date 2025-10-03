@@ -1,0 +1,48 @@
+from collections import deque
+
+class Graph:
+    def __init__(self):
+        self.graph = {}
+
+    def add_edge(self, u, v):
+        if u not in self.graph:
+            self.graph[u] = []
+        self.graph[u].append(v)
+
+    def bfs(self, start):
+        visited = set()
+        queue = deque([start])
+        result = []
+
+        while queue:
+            node = queue.popleft()
+            if node not in visited:
+                result.append(node)
+                visited.add(node)
+                queue.extend(self.graph.get(node, []))
+        return result
+
+    def dfs(self, start):
+        visited = set()
+        result = []
+
+        def dfs_util(v):
+            if v not in visited:
+                visited.add(v)
+                result.append(v)
+                for neighbor in self.graph.get(v, []):
+                    dfs_util(neighbor)
+        dfs_util(start)
+        return result
+
+# Example
+g = Graph()
+g.add_edge(0, 1)
+g.add_edge(0, 2)
+g.add_edge(1, 2)
+g.add_edge(2, 0)
+g.add_edge(2, 3)
+g.add_edge(3, 3)
+
+print("BFS starting from 2:", g.bfs(2))
+print("DFS starting from 2:", g.dfs(2))
